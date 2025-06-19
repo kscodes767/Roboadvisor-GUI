@@ -1,4 +1,3 @@
-
 from finance_data import finStats, findTicker, stockPrice, companyOverview
 from graph_data import compareCompStocks, compareCompReturns, compareCompVol
 import sys
@@ -90,6 +89,8 @@ def getUserInput(ticker):
     else:
         print("Invalid Choice")
         return getUserInput(ticker)
+    
+
 
 def mainMenu(userChoice, restartFunc):
     while True:

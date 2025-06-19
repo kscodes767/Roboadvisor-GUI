@@ -2,18 +2,21 @@ import yfinance as yf
 from yahooquery import search 
 import pandas as pd
 from save_data import saveData
-
+from graph_data import graphStock
 
 
 def findTicker(company_name):
-    results = search(company_name)
-    if "quotes" in results and len(results["quotes"]) > 0:
+    try: 
+        results = search(company_name)
         ticker_symbol = results["quotes"][0]["symbol"]
         print(f"Ticker Symbol: {ticker_symbol}")
         ticker = yf.Ticker(ticker_symbol)
         return ticker
-    else:
-        print("No ticker found")
+    except (KeyError, IndexError, TypeError):
+        print("Error: Could not find a valid ticker symbol for that company")
+        return None
+    except Exception as e:
+        print(f"Unexpected error occurred {e}")
         return None
 
 def finStats(user_option,ticker):
@@ -45,6 +48,7 @@ def stockPrice(stock_option, ticker):
         print(data)
     else:
         print("Invalid choice")
+    graphStock(ticker)
     saveData(data)
 
 
