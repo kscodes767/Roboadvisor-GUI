@@ -3,16 +3,7 @@ import plotly.graph_objects as go
 import plotly.io as pio
 pio.renderers.default = 'browser'
 
-# def compareCompStocks(tickerList):
-#     plt.figure(figsize = (10,5))
-#     for ticker in tickerList:
-#         data = ticker.history(period ="1mo")['Close']
-#         plt.plot(data,label = ticker.ticker)
-#     plt.title("Stock Price Comparison")
-#     plt.legend()
-#     plt.grid(True)
-#     plt.tight_layout()
-#     plt.show()
+
 
 def compareCompStocks(tickerList):
     while True:
@@ -149,13 +140,13 @@ def compareCompReturns(tickerList):
             print("Invalid Option")
 
 
-def graphStock(ticker):
+def graphStock(ticker, period):
     while True:
         graphOption = input("Would you like to graph this data as well, if yes select y, if no select n\nEnter Option: ").strip().lower()
         symbol = ticker.ticker
         if graphOption == 'y':
             plt.figure(figsize = (10,5))
-            data = ticker.history(period = '1mo')['Close']
+            data = ticker.history(period = period)['Close']
             plt.plot(data,label = ticker.ticker)
             plt.title(f"Stock Price for {symbol}")
             plt.legend()

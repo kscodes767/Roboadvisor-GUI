@@ -1,12 +1,13 @@
 from finance_data import finStats, findTicker, stockPrice, companyOverview
 from graph_data import compareCompStocks, compareCompReturns, compareCompVol
+from forecasting import plotSMA, plotEMA, futurePrice
 import sys
 
 
 # User chooses to look at two companies or just one company 
 def getUserChoice():
     while True:
-        userChoice = input("1. Just One Company \n2. Two Companies \n3. Compare Company Data \n Enter Choice: ").strip()
+        userChoice = input("1. Just One Company \n2. Two Companies \n3. Compare Company Data \n4. Forecasting \nEnter Choice: ").strip()
         if userChoice == "1":
             return ("single", getCompanyName())
         elif userChoice == "2":
@@ -14,6 +15,8 @@ def getUserChoice():
         elif userChoice == "3":
             tickers = getCompareNames()
             return ("compare", tickers)
+        elif userChoice == "4":
+            return("Forecast" ,getForecastName())
         else:
             print("invalid option")
          
@@ -90,8 +93,27 @@ def getUserInput(ticker):
         print("Invalid Choice")
         return getUserInput(ticker)
     
+def getForecastName():
+    while True:
+        compName1 = input("Enter name of the company: ").strip().lower()
+        ticker = findTicker(compName1)
+        if ticker:
+            return ticker
+        else:
+            print("Invalid ticker, please try again.")
 
-
+def forecastMenu(ticker):
+    forecastOption = input("What would you like to calculate: \n1: Simple Moving Average (SMA) \n2. Exponential Moving Average (EMA) \n3. Look at future stock prices \nEnter Choice: ").strip().lower()
+    if forecastOption == "1":
+        plotSMA(ticker)
+    elif forecastOption == "2":
+        plotEMA(ticker)
+    elif forecastOption == "3":
+        futurePrice(ticker)
+    else:
+        print("Invalid option.")
+        forecastMenu(ticker)
+    
 def mainMenu(userChoice, restartFunc):
     while True:
         menuChoice = input("What would you like to do next?\n1. Go back to original menu \n2. Repeat last action \n3. Exit\nEnter Choice: ").strip()
@@ -111,6 +133,9 @@ def mainMenu(userChoice, restartFunc):
             elif userChoice == "3":
                 tickerList = getCompareNames()
                 compareOptions(tickerList)
+            elif userChoice == "4":
+                ticker = getForecastName()
+                forecastMenu(ticker)
         elif menuChoice == "3":
             print("Goodbye!")
             sys.exit()

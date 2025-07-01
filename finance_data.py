@@ -20,36 +20,36 @@ def findTicker(company_name):
         return None
 
 def finStats(user_option,ticker):
-    if user_option not in ["1", "2", "3"]:
-        print("Incorrect option")
-        # getUserInput(ticker)
-    elif user_option == "1":
-        data = pd.DataFrame(ticker.balance_sheet)
+    finOptions = {
+        "1": "balance_sheet",
+        "2": "cashflow",
+        "3": "income_stmt"
+    }
+    attrName = finOptions.get(user_option)
+    if not attrName :
+        print("Incorrect Option")
+        return
+    else:
+        data = getattr(ticker, attrName)
+        data = pd.DataFrame(data)
         print(data)
-    elif user_option == "2":
-        data = pd.DataFrame(ticker.cashflow)
-        print(data)
-    elif user_option == '3':
-        data = pd.DataFrame(ticker.income_stmt)
-        print(data)
-    saveData(data)
-
-    
+        saveData(data)
 
 def stockPrice(stock_option, ticker):
-    if stock_option == "1":
-        data = ticker.history(period = "1d")
+    stockOptionMap = {
+        "1": "1d",
+        "2": "5d",
+        "3": "1mo"
+    }
+    period = stockOptionMap.get(stock_option)
+    if period:
+        data = pd.DataFrame(ticker.history(period =  period))
         print(data)
-    elif stock_option == "2":
-       data = ticker.history(period = "5d")
-       print(data)
-    elif stock_option == "3":
-        data = ticker.history(period = "1mo")
-        print(data)
+        graphStock(ticker, period)
+        saveData(data)
     else:
-        print("Invalid choice")
-    graphStock(ticker)
-    saveData(data)
+        print("Invalid Option")
+
 
 
 def companyOverview(ticker):
