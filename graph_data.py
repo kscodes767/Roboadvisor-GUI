@@ -141,7 +141,6 @@ def compareCompReturns(tickerList):
 
 
 def graphStock(ticker, period):
-    while True:
         graphOption = input("Would you like to graph this data as well, if yes select y, if no select n\nEnter Option: ").strip().lower()
         symbol = ticker.ticker
         if graphOption == 'y':

@@ -1,6 +1,6 @@
 from finance_data import finStats, findTicker, stockPrice, companyOverview
 from graph_data import compareCompStocks, compareCompReturns, compareCompVol
-from forecasting import plotSMA, plotEMA, futurePrice
+from forecasting import plotSMA, plotEMA, futurePrice, plotARIMA
 import sys
 
 
@@ -103,13 +103,15 @@ def getForecastName():
             print("Invalid ticker, please try again.")
 
 def forecastMenu(ticker):
-    forecastOption = input("What would you like to calculate: \n1: Simple Moving Average (SMA) \n2. Exponential Moving Average (EMA) \n3. Look at future stock prices \nEnter Choice: ").strip().lower()
+    forecastOption = input("What would you like to calculate: \n1: Simple Moving Average (SMA) \n2. Exponential Moving Average (EMA) \n3. Look at future stock prices \n4. ARIMA Model \nEnter Choice: ").strip().lower()
     if forecastOption == "1":
         plotSMA(ticker)
     elif forecastOption == "2":
         plotEMA(ticker)
     elif forecastOption == "3":
         futurePrice(ticker)
+    elif forecastOption == "4":
+        plotARIMA(ticker)
     else:
         print("Invalid option.")
         forecastMenu(ticker)
