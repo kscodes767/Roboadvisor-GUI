@@ -2,65 +2,119 @@ from finance_data import finStats, findTicker, stockPrice, companyOverview
 from graph_data import compareCompStocks, compareCompReturns, compareCompVol
 from forecasting import plotSMA, plotEMA, futurePrice, plotARIMA
 import sys
+import streamlit as st
 
 
-# User chooses to look at two companies or just one company 
+# User chooses to look at two companies or just one company    
+
 def getUserChoice():
-    while True:
-        userChoice = input("1. Just One Company \n2. Two Companies \n3. Compare Company Data \n4. Forecasting \nEnter Choice: ").strip()
-        if userChoice == "1":
-            return ("single", getCompanyName())
-        elif userChoice == "2":
-            return ("double", getTwoCompNames())
-        elif userChoice == "3":
+        userChoice = st.radio(
+            "Please Select a choice",
+            options = [
+            "1. One Company",
+            "2. Two Companies",
+            "3. Compare Company Data",
+            "4. Forecasting"
+
+            ]
+
+        )
+
+        if "1. One Company" in userChoice:
+            ticker = getCompanyName()
+            return ("single", ticker)
+        elif "2. Two Companies" in userChoice:
+            ticker = getTwoCompNames()
+            return ("double", ticker)
+        elif "3. Compare Company Data" in userChoice:
             tickers = getCompareNames()
             return ("compare", tickers)
-        elif userChoice == "4":
-            return("Forecast" ,getForecastName())
-        else:
-            print("invalid option")
-         
-    
+        elif "4. Forecasting" in userChoice:
+            ticker = getForecastName()
+            return("Forecast" ,ticker)
+        return None
+
+
 
 # Get company name from user:
 def getCompanyName():
-    while True:
-        company_name = input("Enter a company name: ").strip()
+        
+        company_name = st.text_input("Enter a company name: ").strip()
         ticker = findTicker(company_name)
         if ticker:
+            st.success(f"Found ticker: {ticker}")
             return ticker
         else:
-            print("Invalid company name")
+            st.error("Invalid company name")
+        return None
       
 
 def getTwoCompNames():
-    while True:
-        compName1 = input("Enter name of first company: ").strip()
-        ticker1 = findTicker(compName1)
-        if ticker1:
-            break
-    while True:
-        compName2 = input ("Enter name of second company: ").strip()
-        ticker2 = findTicker(compName2)
-        if ticker2:
-            break
-    return ticker1, ticker2
+        compName1 = st.text_input("Enter name of first company: ").strip()
+        ticker1 = None
+        ticker2 = None
+        if compName1:
+            ticker1 = findTicker(compName1)
+            if ticker1:
+                st.success(f"Found ticker {ticker1}")
+                compName2 = st.text_input("Enter name of second company: ").strip()
+                if compName2:
+                    ticker2 = findTicker(compName2)
+                    if ticker2:
+                        st.success(f"Found ticker {ticker2}")  
+                        return(ticker1, ticker2)  
+                    else:
+                        st.error("Invalid ticker1")
+                else:
+                    st.warning("Please enter the second company name")
+            else:
+                st.error("Invalid ticker2")
+        return None
+
+         
 
 # Get company names for a comparison
 def getCompareNames():
-    numTickers = int(input("How many companies would you like to compare: ").strip())
-    tickerList = []
-    for i in range (numTickers):
-        name = input(f"Please enter company name {i + 1}: ").strip()
-        ticker = findTicker(name)
-        if ticker:
-            print(f"Added ticker: {ticker.ticker}")
-            tickerList.append(ticker)
-        else:
-            print(f"Ticker not found for: {name}")
-    # compareOptions(tickerList)
-    return tickerList
+    with st.form("compare_form"):  # Start the form block
 
+        numTickers = st.number_input(
+            "How many companies would you like to compare:",
+            min_value=1,
+            step=1,
+            format="%d"
+        )
+
+        # Collect company names using a list comprehension
+        names = [
+            st.text_input(
+                f"Enter company {i + 1}:",
+                key=f"compare_{i}"
+            ).strip()
+            for i in range(int(numTickers))
+        ]
+
+        # Must be inside the form block
+        submitted = st.form_submit_button("Look up tickers")
+
+    # Outside the form block
+    if submitted:
+        tickerList = []
+        for name in names:
+            if name:
+                ticker = findTicker(name)
+                if ticker:
+                    st.success(f"Added ticker: {ticker}")
+                    tickerList.append(ticker)
+                else:
+                    st.error(f"Ticker not found for: {name}")
+                    return None
+            else:
+                st.error("Invalid company name")
+                return None
+
+        return tickerList
+
+    return None
 
 def compareOptions(tickerList):
         if not tickerList:
