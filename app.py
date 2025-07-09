@@ -4,12 +4,12 @@ import plotly.graph_objects as go
 from datetime import date
 
 from finance_data import (
-    findTicker, stockPrice,                       # CLI helpers you wrote
-    finStats, companyOverview                     # ← already Streamlit-friendly
+    findTicker, stockPrice,                      
+    finStats, companyOverview                    
 )
 from forecasting import plotSMA, plotEMA, futurePrice, plotARIMA
-from graph_data import compareCompStocks          # we’ll reuse for interactive chart
-from save_data import saveData                    # still works
+from graph_data import compareCompStocks          
+from save_data import saveData                    
 
 
 def showPriceChart(df, symbol, interactive: bool):
