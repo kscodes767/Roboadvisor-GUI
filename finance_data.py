@@ -6,7 +6,7 @@ from graph_data import graphStock
 import streamlit as st
 
 
-
+@st.cache_resource
 def findTicker(company_name):
     try: 
         results = search(company_name)
@@ -20,6 +20,7 @@ def findTicker(company_name):
     except Exception as e:
         st.error(f"Unexpected error occurred {e}")
         return None
+    
 
 def finStats(ticker):
     option = st.radio(
