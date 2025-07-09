@@ -5,11 +5,18 @@ import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 import yfinance as yf
 from statsmodels.tsa.stattools import adfuller
+import streamlit as st
 
 def plotSMA(ticker):
 
-    try: 
-        window = int(input("Enter window size for SMA: ").strip())
+        window = st.number_input(
+            "Enter the window size for SMA: ",
+            min_value = 1,
+            max_value = 30,
+            value = 5,
+            step = 1
+     
+        )
         data = ticker.history(period = '1mo')
         close = data['Close']
 
@@ -24,15 +31,20 @@ def plotSMA(ticker):
         plt.xlabel("Day")
         plt.ylabel("Price")
         plt.tight_layout()
-        plt.show()
+        st.pyplot(plt)
 
-    except Exception as e:
-        print(f"Error generating SMA plot: {e}")
 
     
 def plotEMA(ticker):
-    try: 
-        window = int(input("Enter window size for EMA: ").strip())
+
+        window = st.number_input(
+             "Enter a window size for the EMA: ",
+             min_value = 1,
+             max_value = 30,
+             value = 5,
+             step = 1
+
+        )
         data = ticker.history(period = '1mo')
         close = data['Close']
 
@@ -45,16 +57,19 @@ def plotEMA(ticker):
         plt.xlabel("Day")
         plt.ylabel("Price")
         plt.tight_layout()
-        plt.show()
-    except Exception as e:
-        print(f"Error generating EMA plot: {e}")
+        st.pyplot(plt)
+    
+    
 
 def futurePrice(ticker):
-    try:
-        daysAhead = int(input("Enter number of days ahead to forecast: ").strip())
-    except Exception as e:
-        print("Invalid input, defaulting days ahead as 7")
-        daysAhead = 7
+    daysAhead = st.number_input(
+         "Enter number of days ahead to forecast: ",
+            min_value = 1,
+             max_value = 30,
+             value = 5,
+             step = 1,
+             help="Forecast stock price for up to 30 future days using linear regression"
+    )
     data = ticker.history(period = '1mo')['Close'].dropna()
     data = data[-90:]
     data=data.reset_index()
@@ -81,7 +96,7 @@ def futurePrice(ticker):
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    st.pyplot(plt)
 
 
 def plotARIMA(ticker):
@@ -135,9 +150,9 @@ def plotARIMA(ticker):
     print("p-value: ", adfResult[1])
 
     if adfResult[1] < 0.05:
-        print("Likely Stationary")
+        st.success("Likely Stationary")
     else:
-        print("Likely non-stationary")
+        st.error("Likely non-stationary")
 
     model = ARIMA(data, order = (5, 1, 0))
     modelFit= model.fit()
@@ -159,7 +174,7 @@ def plotARIMA(ticker):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    st.pyplot(plt)
    
 
 
