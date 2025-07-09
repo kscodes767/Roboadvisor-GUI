@@ -83,25 +83,6 @@ def futurePrice(ticker):
     plt.tight_layout()
     plt.show()
 
-# def plotARIMA(ticker):
-#     data = ticker.history(period = "6mo")['Close'].dropna()
-#     data.index = pd.to_datetime(data.index)
-
-#     model = ARIMA(data, order = (5, 1, 0))
-#     modelFit= model.fit()
-#     forecast = modelFit.forecast(steps = 7)
-
-#     plt.figure(figsize=(10,5))
-#     plt.plot(data, label = 'Historical')
-#     plt.plot(pd.date_range(start=data.index[-1] + pd.Timedelta(days=1), periods=7), forecast, label='Forecast', linestyle='--', color='orange')
-#     plt.title("ARIMA Stock Price Forecast")
-#     plt.xlabel("Date")
-#     plt.ylabel("Price (USD)")
-#     plt.legend()
-#     plt.grid(True)
-#     plt.tight_layout()
-#     plt.show()
-
 
 def plotARIMA(ticker):
     data = ticker.history(period = "6mo")['Close'].dropna()
