@@ -3,59 +3,74 @@ from yahooquery import search
 import pandas as pd
 from save_data import saveData
 from graph_data import graphStock
+import streamlit as st
+
 
 
 def findTicker(company_name):
     try: 
         results = search(company_name)
         ticker_symbol = results["quotes"][0]["symbol"]
-        print(f"Ticker Symbol: {ticker_symbol}")
+        (f"Ticker Symbol: {ticker_symbol}")
         ticker = yf.Ticker(ticker_symbol)
         return ticker
     except (KeyError, IndexError, TypeError):
-        print("Error: Could not find a valid ticker symbol for that company")
+        st.error("Error: Could not find a valid ticker symbol for that company")
         return None
     except Exception as e:
-        print(f"Unexpected error occurred {e}")
+        st.error(f"Unexpected error occurred {e}")
         return None
 
-def finStats(user_option,ticker):
+def finStats(ticker):
+    option = st.radio(
+    "What would you like to look at: ",
+
+      options =  [
+        "Balance Sheet",
+        "Cash Flow",
+        "Income Statement"  
+       ] 
+    )
     finOptions = {
-        "1": "balance_sheet",
-        "2": "cashflow",
-        "3": "income_stmt"
+        "Balance Sheet": "balance_sheet",
+        "Cash Flow": "cashflow",
+        "Income Statement": "income_stmt"
     }
-    attrName = finOptions.get(user_option)
+    attrName = finOptions.get(option)
     if not attrName :
-        print("Incorrect Option")
+        st.error("Incorrect Option")
         return
     else:
         data = getattr(ticker, attrName)
         data = pd.DataFrame(data)
-        print(data)
+        st.dataframe(data)
         saveData(data)
 
-def stockPrice(stock_option, ticker):
+def stockPrice(ticker):
+    option = st.radio(
+        "What timeframe would you like to look at: ",
+        options = [ "1 Day", "5 Days", "1 Month"],
+    )
     stockOptionMap = {
-        "1": "1d",
-        "2": "5d",
-        "3": "1mo"
+        "1 Day": "1d",
+        "5 Days": "5d",
+        "1 Month": "1mo"
     }
-    period = stockOptionMap.get(stock_option)
+    period = stockOptionMap.get(option)
     if period:
         data = pd.DataFrame(ticker.history(period =  period))
-        print(data)
+        st.dataframe(data)
         graphStock(ticker, period)
         saveData(data)
     else:
-        print("Invalid Option")
+        st.error("Invalid Option")
 
 
 
 def companyOverview(ticker):
     info = ticker.info
-    print(f"Name: {info.get('longName', 'N/A')}")
-    print(f"Sector: {info.get('sector', 'N/A')}")
-    print(f"Industry: {info.get('industry', 'N/A')}")
-    print(f"Description: {info.get('longBusinessSummary', 'N/A')}")
+    st.write(f"Name: {info.get('longName', 'N/A')}")
+    st.write(f"Sector: {info.get('sector', 'N/A')}")
+    st.write(f"Industry: {info.get('industry', 'N/A')}")
+    st.write(f"Description: {info.get('longBusinessSummary', 'N/A')}")
 
