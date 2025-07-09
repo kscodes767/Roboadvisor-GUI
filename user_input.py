@@ -161,7 +161,7 @@ def getUserInput(ticker):
                 "Month"
             ]
         )
-        stockPrice(stockOption, ticker)
+        stockPrice(ticker)
 
     elif category == "Company Overview":
         companyOverview(ticker)
