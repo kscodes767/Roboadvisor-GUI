@@ -1,14 +1,22 @@
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.io as pio
+import streamlit as st
 pio.renderers.default = 'browser'
 
 
 
 def compareCompStocks(tickerList):
-    while True:
-        graphType = input("Press 1 for static graph and 2 for interactive graph \nEnter Choice: ")
-        if graphType == "1":
+        graphType = st.radio (
+            "What kind of graph would you like",
+            options = [
+            "Static Graph",
+            "Interactive Graph"
+            ]
+            
+        )
+        
+        if graphType == "Static Graph":
             plt.figure(figsize = (10,5))
             for ticker in tickerList:
                 data = ticker.history(period ="1mo")['Close']
@@ -19,8 +27,9 @@ def compareCompStocks(tickerList):
             plt.tight_layout()
             plt.xlabel('Date')
             plt.ylabel('Price(USD)')
-            plt.show()
-        elif graphType == "2":
+            st.pyplot(plt)
+
+        elif graphType == "Interactive Graph":
             fig = go.Figure()
 
             for ticker in tickerList:
@@ -43,16 +52,20 @@ def compareCompStocks(tickerList):
                     height = 500,
                     width = 900
                 )
-                fig.show()
-        else:
-            print("Invalid Option")
+            st.plotly_chart(fig, use_container_width=True)
             
 
 
 def compareCompVol(tickerList):
-    while True:
-        graphType = input("Press 1 for static graph and 2 for interactive graph \nEnter Choice: ")
-        if graphType == "1":
+        graphType = st.radio(
+             "What type of graph would you like",
+             options = [
+            "Static Graph",
+             "Interactive Graph"         
+             ]
+
+        )
+        if graphType == "Static Graph":
             plt.figure(figsize = (10,5))
             for ticker in tickerList:
                 volume = ticker.history(period ="1mo")['Volume']
@@ -63,8 +76,8 @@ def compareCompVol(tickerList):
             plt.tight_layout()
             plt.xlabel("Date")
             plt.ylabel("Volume Traded")
-            plt.show()
-        elif graphType == "2":
+            st.pyplot(plt)
+        elif graphType == "Interactive Graph":
             fig = go.Figure()
 
             for ticker in tickerList:
@@ -88,16 +101,20 @@ def compareCompVol(tickerList):
                     height = 500,
                     width = 900
                 )
-                fig.show()
+            st.plotly_chart(fig, use_container_width=True)
 
-        else:
-            print("Invalid option")
 
 
 def compareCompReturns(tickerList):
-    while True:
-        graphType = input("Press 1 for static graph and 2 for interactive graph \nEnter Choice: ")
-        if graphType == "1":
+        graphType = st.radio(
+             "What type of graph would you like",
+             options = [
+                  "Static Graph",
+
+                  "Interactive Graph"
+             ]
+        )
+        if graphType == "Static Graph":
             plt.figure(figsize = (10,5))
             for ticker in tickerList:
                 data = ticker.history(period ="1mo")
@@ -108,9 +125,9 @@ def compareCompReturns(tickerList):
             plt.legend()
             plt.grid(True)
             plt.tight_layout()
-            plt.show()
+            st.pyplot(plt)
 
-        elif graphType == "2":
+        elif graphType == "Interactive Graph":
             fig = go.Figure()
 
             for ticker in tickerList:
@@ -135,15 +152,19 @@ def compareCompReturns(tickerList):
                     height = 500,
                     width = 900
                 )
-                fig.show()
-        else:
-            print("Invalid Option")
+            st.plotly_chart(fig, use_container_width=True)
 
 
 def graphStock(ticker, period):
-        graphOption = input("Would you like to graph this data as well, if yes select y, if no select n\nEnter Option: ").strip().lower()
+        graphOption = st.radio(
+            "Would you like to graph this data as well",
+            options = [
+                 "Yes",
+                 "No"
+            ] 
+        )
         symbol = ticker.ticker
-        if graphOption == 'y':
+        if graphOption == "Yes":
             plt.figure(figsize = (10,5))
             data = ticker.history(period = period)['Close']
             plt.plot(data,label = ticker.ticker)
@@ -153,12 +174,10 @@ def graphStock(ticker, period):
             plt.tight_layout()
             plt.xlabel('Date')
             plt.ylabel('Price(USD)')
-            plt.show()
-        elif graphOption == 'n':
+            st.pyplot(plt)
+        elif graphOption == "No":
             pass
-        else:
-            print("Invalid option")
-    
+
 
 
 
