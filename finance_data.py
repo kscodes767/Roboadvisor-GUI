@@ -20,9 +20,26 @@ def findTicker(company_name):
     except Exception as e:
         st.error(f"Unexpected error occurred {e}")
         return None
+
+
+
+@st.cache_resource
+def getTicker(symbol):
+    return (yf.Ticker(symbol))
+
+@st.cache_data
+def getFinData(symbol, attrName):
+    ticker = getTicker(symbol)
+    rawData = getattr(ticker, attrName)
+    return pd.DataFrame(rawData)
     
 
 def finStats(ticker):
+    st.subheader("View Financial Statements")
+    show = st.checkbox("Click to load financial statements")
+    if not show:
+        return
+    
     option = st.radio(
     "What would you like to look at: ",
 
@@ -41,27 +58,32 @@ def finStats(ticker):
     if not attrName :
         st.error("Incorrect Option")
         return
-    else:
-        data = getattr(ticker, attrName)
-        data = pd.DataFrame(data)
-        st.dataframe(data)
-        saveData(data)
+    with st.spinner("Loading financial data..."):
+        data = getFinData(ticker.ticker.strip().upper(), attrName)
+        if data.empty:
+            st.error("No data found!")
+        else:
+            st.dataframe(data)
 
-def stockPrice(ticker):
-    option = st.radio(
-        "What timeframe would you like to look at: ",
-        options = [ "1 Day", "5 Days", "1 Month"],
-    )
-    stockOptionMap = {
-        "1 Day": "1d",
-        "5 Days": "5d",
-        "1 Month": "1mo"
-    }
-    period = stockOptionMap.get(option)
+
+
+
+def stockPrice(period, ticker):
+
+    # option = st.radio(
+    #     "What timeframe would you like to look at: ",
+    #     options = [ "1 Day", "5 Days", "1 Month"],
+    # )
+    # stockOptionMap = {
+    #     "1 Day": "1d",
+    #     "5 Days": "5d",
+    #     "1 Month": "1mo"
+    # }
+    # period = stockOptionMap.get(option)
     if period:
         data = pd.DataFrame(ticker.history(period =  period))
         st.dataframe(data)
-        graphStock(ticker, period)
+        # graphStock(ticker, period)
         saveData(data)
     else:
         st.error("Invalid Option")

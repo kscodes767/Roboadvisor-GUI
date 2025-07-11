@@ -45,7 +45,7 @@ def singleMenuTicker(ticker):
             "Plot SMA",
             "Plot EMA",
             "Future Forecast (Linear)",
-            "Forecast (ARIMA)"
+            "Future Forecast (ARIMA)"
             ]
 
 
@@ -55,13 +55,14 @@ def singleMenuTicker(ticker):
             companyOverview(ticker)
         elif option == "Financial Statements":
             finStats(ticker)
-        elif option == "Quick 1,5,30 Day Table":
+        elif option == "Quick View (1,5,30 Day Table)":
             timeFrame = st.radio(
                 "Pick a time frame: ",
                 options = ["1 Day", "5 Days", "30 Days"], horizontal=True,
                 
             )
-            tf_map = {"1 Day":"1", "5 Days": "2", "30 Days":"3"}
+            tf_map = {"1 Day":"1d", "5 Days": "5d", "30 Days":"1mo"
+                      }
             stockPrice(tf_map[timeFrame], ticker)   
 
         elif option == "Custom Price Window":
