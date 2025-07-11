@@ -67,27 +67,47 @@ def finStats(ticker):
 
 
 
+@st.cache_data
+def getStockPrice(symbol, period):
+    ticker = getTicker(symbol)
+    rawStockData = ticker.history(period= period)
+    return pd.DataFrame(rawStockData)
 
-def stockPrice(period, ticker):
 
-    # option = st.radio(
-    #     "What timeframe would you like to look at: ",
-    #     options = [ "1 Day", "5 Days", "1 Month"],
-    # )
-    # stockOptionMap = {
-    #     "1 Day": "1d",
-    #     "5 Days": "5d",
-    #     "1 Month": "1mo"
-    # }
-    # period = stockOptionMap.get(option)
-    if period:
-        data = pd.DataFrame(ticker.history(period =  period))
-        st.dataframe(data)
-        # graphStock(ticker, period)
-        saveData(data)
-    else:
+def stockPrice(ticker):
+
+    option = st.radio(
+        "What timeframe would you like to look at: ",
+        options = [ "1 Day", "5 Days", "1 Month"],
+        horizontal= True
+    )
+    stockOptionMap = {
+        "1 Day": "1d",
+        "5 Days": "5d",
+        "1 Month": "1mo"
+    }
+    period = stockOptionMap.get(option)
+    if not period:
         st.error("Invalid Option")
+        return
+    with st.spinner("Loadin stock data..."):
+        symbol = ticker.ticker.strip().upper()
+        data = getStockPrice(symbol, period)
+        if data.empty:
+            st.error("No data found!")
+        else:
+            st.dataframe(data)
+            graphOption = st.radio(
+                "Would you like to graph this as well?",
+                options = ["Yes", "No"],
+                horizontal=True
+            )
+            if graphOption == "Yes":
+                graphStock(ticker, period)
+            else:
+                return
 
+    
 
 
 def companyOverview(ticker):

@@ -156,27 +156,27 @@ def compareCompReturns(tickerList):
 
 
 def graphStock(ticker, period):
-        graphOption = st.radio(
-            "Would you like to graph this data as well",
-            options = [
-                 "Yes",
-                 "No"
-            ] 
-        )
+        # graphOption = st.radio(
+        #     "Would you like to graph this data as well",
+        #     options = [
+        #          "Yes",
+        #          "No"
+        #     ] 
+        # )
         symbol = ticker.ticker
-        if graphOption == "Yes":
-            plt.figure(figsize = (10,5))
-            data = ticker.history(period = period)['Close']
-            plt.plot(data,label = ticker.ticker)
-            plt.title(f"Stock Price for {symbol}")
-            plt.legend()
-            plt.grid(True)
-            plt.tight_layout()
-            plt.xlabel('Date')
-            plt.ylabel('Price(USD)')
-            st.pyplot(plt)
-        elif graphOption == "No":
-            pass
+        # if graphOption == "Yes":
+        plt.figure(figsize = (10,5))
+        data = ticker.history(period = period)['Close']
+        plt.plot(data,label = ticker.ticker)
+        plt.title(f"Stock Price for {symbol}")
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        plt.xlabel('Date')
+        plt.ylabel('Price(USD)')
+        st.pyplot(plt)
+        # elif graphOption == "No":
+        #     pass
 
 
 
