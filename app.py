@@ -5,7 +5,9 @@ from datetime import date
 
 from finance_data import (
     findTicker, stockPrice,                      
-    finStats, companyOverview                    
+    finStats, companyOverview,
+    peRatio
+
 )
 from forecasting import plotSMA, plotEMA, futurePrice, plotARIMA
 from graph_data import compareCompStocks          
@@ -43,6 +45,7 @@ def singleMenuTicker(ticker):
             "Financial Statements",
             "Quick View (1,5,30 Day Table)",
             "Custom Price Window",
+            "P/E Ratio",
             "Plot SMA",
             "Plot EMA",
             "Future Forecast (Linear)",
@@ -74,6 +77,8 @@ def singleMenuTicker(ticker):
                     st.dataframe(df)
                     showPriceChart(df, ticker.ticker, chartType)
                     saveData(df)
+        elif option == "P/E Ratio":
+            peRatio(ticker)
         elif option == "Plot SMA":
             plotSMA(ticker)
         elif option == "Plot EMA":

@@ -117,3 +117,10 @@ def companyOverview(ticker):
     st.write(f"Industry: {info.get('industry', 'N/A')}")
     st.write(f"Description: {info.get('longBusinessSummary', 'N/A')}")
 
+def peRatio(ticker):
+    pe = ticker.info.get("trailingPE", None)
+    if pe is not None:
+        st.metric("PE Ratio (Trailing)", value = f"{pe:.2f}")
+    else:
+        st.warning("PE ratio not available for this company")
+
