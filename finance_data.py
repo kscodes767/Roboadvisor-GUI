@@ -132,11 +132,11 @@ def companyRatio(ticker):
             st.metric("PE Ratio (Trailing)", value = f"{pe:.2f}")
        else:
             st.warning("PE ratio not available for this company")
-    # with row1_col2:
-    #     pegRatio = ticker.info.get("pegRatio", "N/A")
-    #     if pegRatio is not None:
-    #         st.metric("PEG Ratio", value = f"{pegRatio:.2f}" )
-    #     else:
+    with row1_col2:
+        pegRatio = ticker.info.get("pegRatio", None)
+        if pegRatio is not None:
+            st.metric("PEG Ratio", value = f"{pegRatio:.2f}" )
+        else:
             st.warning("PEG Ratio is not found")
     with row1_col3:
         priceToBook = ticker.info.get("priceToBook", None)
