@@ -124,3 +124,52 @@ def peRatio(ticker):
     else:
         st.warning("PE ratio not available for this company")
 
+def companyRatio(ticker):
+    row1_col1, row1_col2, row1_col3 = st.columns(3)
+    with row1_col1:
+       pe = ticker.info.get("trailingPE", None)
+       if pe is not None:
+            st.metric("PE Ratio (Trailing)", value = f"{pe:.2f}")
+       else:
+            st.warning("PE ratio not available for this company")
+    # with row1_col2:
+    #     pegRatio = ticker.info.get("pegRatio", "N/A")
+    #     if pegRatio is not None:
+    #         st.metric("PEG Ratio", value = f"{pegRatio:.2f}" )
+    #     else:
+            st.warning("PEG Ratio is not found")
+    with row1_col3:
+        priceToBook = ticker.info.get("priceToBook", None)
+        if priceToBook is not None:
+            st.metric("Price To Book", value = f"{priceToBook:.2f}")
+        else:
+            st.warning("Price to Book not available for this company")
+    st.divider()
+    row2_col1, row2_col2, row2_col3 = st.columns(3)
+    with row2_col1:
+        marketCap = ticker.info.get("marketCap", None)
+        if marketCap is not None:
+            st.metric("Market Cap", value = f"{marketCap:,}")
+        else:
+            st.warning("Market Cap not available for this company")
+    with row2_col2:
+        ebitda = ticker.info.get("enterpriseToEbitda", None)
+        if ebitda is not None:
+            st.metric("EV/EBITDA", value = f"{ebitda:.2f}")
+        else:
+            st.warning("EV/EBITDA not available for this company")
+    with row2_col3:
+        trailingEps = ticker.info.get("trailingEps" , None)
+        forwardEps = ticker.info.get("forwardEps", None)
+        if trailingEps is not None:
+            st.metric("Trailing EPS", value = f"{trailingEps:.2f}")
+        else:
+            st.warning("Trailing EPS not available for this company")
+        if forwardEps is not None:
+              st.metric("Forward EPS", value = f"{forwardEps:.2f}")
+        else:
+            st.warning("Forward EPS not available")
+        
+    
+
+
