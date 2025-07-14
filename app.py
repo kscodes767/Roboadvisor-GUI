@@ -44,7 +44,6 @@ def singleMenuTicker(ticker):
             "Financial Statements",
             "Quick View (1,5,30 Day Table)",
             "Custom Price Window",
-            "P/E Ratio",
             "Company Statistics",
             "Plot SMA",
             "Plot EMA",
