@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 from datetime import date
+from chat_bot import askLlama
 
 from finance_data import (
     findTicker, stockPrice,                      
