@@ -155,6 +155,35 @@ def getUserChoice():
     return None, None
 
 
+def chatBot():
+    with st.sidebar:
+        st.markdown("LLama3 Chatbot Assistant")
+        st.markdown("Ask me about any questions you have")
+
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
+    user_input = st.text_input("Your Question: ")
+    
+    if user_input:
+        st.chat_message("user").markdown(user_input)
+        st.session_state.chat_history.append({"role": "assistant", "content": user_input})
+
+        with st.spinner("Llama is thinking..."):
+            reply = askLlama(st.session_state.chat_history)
+        
+        st.chat_message("assistant").markdown(reply)
+        st.session_state.chat_history.append({"role": "assistant", "content": reply})
+
+    if st.button("Clear Chat"):
+         st.session_state.chat_history = []
+
+
+
+
+
+
+
 
 def main():
     choice_type, data = getUserChoice()
@@ -172,6 +201,8 @@ def main():
 
     elif choice_type is None:
         st.info("👆 Select an option to begin.")
+        
+    chatBot()
 
 
 if __name__ == "__main__":
